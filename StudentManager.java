@@ -36,7 +36,29 @@ public class StudentManager
 	
 	public void addStudent(String name, int grade) 
 	{
+		String sql = "INSERT INTO students (name, grade) VALUES (?, ?)";
 		
+		try (Connection conn = getConnection();
+		         PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+		        // 1. Set the values for the placeholders (?)
+		        // Parameter indexes start at 1
+		        pstmt.setString(1, name);
+		        pstmt.setInt(2, grade);
+
+		        // 2. Execute the update (INSERT, UPDATE, DELETE use executeUpdate)
+		        int rowsAffected = pstmt.executeUpdate();
+
+		        if (rowsAffected > 0) {
+		            System.out.println("✅ Student added successfully!");
+		        } else {
+		            System.out.println("❌ Failed to add student.");
+		        }
+
+		    } catch (SQLException e) {
+		        // Handle database specific errors (e.g., connection lost, data too long)
+		        System.out.println("❌ Database Error while adding student: " + e.getMessage());
+		    }
     }
 	
 	public List<Student> viewAllStudents() 

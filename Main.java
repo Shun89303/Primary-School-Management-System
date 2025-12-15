@@ -6,7 +6,6 @@ import java.util.Scanner;
 
 public class Main 
 {
-
 	public static void main(String[] args) 
 	{
 		try (Scanner scanner = new Scanner(System.in)) 
@@ -125,7 +124,7 @@ public class Main
 			    catch (InputMismatchException e) 
 			    {
 					System.out.println("Error: Input mismatch. Please ensure you enter numbers for ID and Grade.");
-			        scanner.nextLine();
+			        scanner.nextLine(); 
 				}
 			}
 		}

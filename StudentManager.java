@@ -121,6 +121,23 @@ public class StudentManager
 	
 	public boolean isEmpty() 
 	{
-	    return true;
+	    String sql = "SELECT COUNT(*) FROM students";
+	    
+	    try (Connection conn = getConnection();
+	         Statement stmt = conn.createStatement();
+	         ResultSet rs = stmt.executeQuery(sql)) 
+	    {
+	        
+	        if (rs.next()) 
+	        {
+	            int count = rs.getInt(1);
+	            return count == 0;
+	        }
+	    } 
+	    catch (SQLException e) 
+	    {
+	        System.out.println("❌ Database Error during isEmpty check: " + e.getMessage());
+	    }
+	    return true; 
 	}
 }

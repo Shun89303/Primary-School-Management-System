@@ -1,52 +1,56 @@
 package student_management_system;
 
+import java.sql.*;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+
 
 public class StudentManager 
 {
-	private final HashMap<Integer, Student> students;
-	private int nextId = 1001;
+	private static final String JDBC_URL = "jdbc:mysql://localhost/student_db";
+    private static final String DB_USER = "root";
+    private static final String DB_PASSWORD = "root1234";
+	
 	
 	public StudentManager() 
 	{
-        this.students = new HashMap<>();
+		try (Connection conn = this.getConnection()) 
+		{
+            if (conn != null) 
+            {
+                System.out.println("✅ Database connection established successfully.");
+            }
+        } 
+		catch (SQLException e) 
+		{
+            System.out.println("❌ Error connecting to the database: " + e.getMessage());
+        }
+    }
+	
+	private Connection getConnection() throws SQLException 
+	{
+        // The DriverManager handles loading the driver and establishing the connection.
+        return DriverManager.getConnection(JDBC_URL, DB_USER, DB_PASSWORD);
     }
 	
 	public void addStudent(String name, int grade) 
 	{
-		int newId = nextId;
 		
-		nextId++;
-		
-		Student student = new Student(newId, name, grade);
-		
-        students.put(newId, student);
-        System.out.println("✅ Successfully added: " + student.getName() + 
-                " (Assigned ID: " + newId + ")");
     }
 	
-	public void viewAllStudents() 
+	public List<Student> viewAllStudents() 
 	{
-        if (students.isEmpty()) 
-        {
-            System.out.println("No students recorded.");
-            return;
-        }
-        System.out.println("\n--- All Students ---");
-        for (Student student : students.values()) 
-        {
-            System.out.println(student);
-        }
-        System.out.println("--------------------");
+		return new ArrayList<>();
     }
 	
 	public Student findStudent(int id) 
 	{
-        return students.get(id);
+        return null;
     }
 	
 	public boolean isEmpty() 
 	{
-	    return students.isEmpty();
+	    return true;
 	}
 }

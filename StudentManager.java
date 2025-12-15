@@ -29,7 +29,6 @@ public class StudentManager
 	
 	private Connection getConnection() throws SQLException 
 	{
-        // The DriverManager handles loading the driver and establishing the connection.
         return DriverManager.getConnection(JDBC_URL, DB_USER, DB_PASSWORD);
     }
 	
@@ -38,24 +37,26 @@ public class StudentManager
 		String sql = "INSERT INTO students (name, grade) VALUES (?, ?)";
 		
 		try (Connection conn = getConnection();
-		         PreparedStatement pstmt = conn.prepareStatement(sql)) {
+		         PreparedStatement pstmt = conn.prepareStatement(sql)) 
+		{
 
-		        // 1. Set the values for the placeholders (?)
-		        // Parameter indexes start at 1
 		        pstmt.setString(1, name);
 		        pstmt.setInt(2, grade);
 
-		        // 2. Execute the update (INSERT, UPDATE, DELETE use executeUpdate)
 		        int rowsAffected = pstmt.executeUpdate();
 
-		        if (rowsAffected > 0) {
+		        if (rowsAffected > 0) 
+		        {
 		            System.out.println("✅ Student added successfully!");
-		        } else {
+		        } 
+		        else 
+		        {
 		            System.out.println("❌ Failed to add student.");
 		        }
 
-		    } catch (SQLException e) {
-		        // Handle database specific errors (e.g., connection lost, data too long)
+		    } 
+			catch (SQLException e) 
+			{
 		        System.out.println("❌ Database Error while adding student: " + e.getMessage());
 		    }
     }
@@ -65,24 +66,23 @@ public class StudentManager
 		List<Student> studentList = new ArrayList<>();
 	    String sql = "SELECT id, name, grade FROM students ORDER BY id ASC";
 
-	    // Try-With-Resources closes Connection, Statement, and ResultSet automatically
 	    try (Connection conn = getConnection();
 	         Statement stmt = conn.createStatement();
-	         ResultSet rs = stmt.executeQuery(sql)) { // executeQuery for SELECT statements
+	         ResultSet rs = stmt.executeQuery(sql)) 
+	    { 
 
-	        // 1. Iterate through the result set
-	        // The ResultSet (rs) holds the data retrieved from the database table.
-	        while (rs.next()) {
-	            // 2. Extract data from the current row
+	        while (rs.next()) 
+	        {
 	            int id = rs.getInt("id");
 	            String name = rs.getString("name");
 	            int grade = rs.getInt("grade");
 
-	            // 3. Create a new Student object and add it to the list
 	            studentList.add(new Student(id, name, grade));
 	        }
 
-	    } catch (SQLException e) {
+	    } 
+	    catch (SQLException e) 
+	    {
 	        System.out.println("❌ Database Error while viewing students: " + e.getMessage());
 	    }
 	    
@@ -91,7 +91,32 @@ public class StudentManager
 	
 	public Student findStudent(int id) 
 	{
-        return null;
+		String sql = "SELECT id, name, grade FROM students WHERE id = ?";
+
+	    try (Connection conn = getConnection();
+	         PreparedStatement pstmt = conn.prepareStatement(sql)) 
+	    {
+
+	        pstmt.setInt(1, id); 
+
+	        try (ResultSet rs = pstmt.executeQuery()) 
+	        {
+	            
+	            if (rs.next()) 
+	            {
+	                String name = rs.getString("name");
+	                int grade = rs.getInt("grade");
+	                
+	                return new Student(id, name, grade);
+	            }
+	        }
+	    } 
+	    catch (SQLException e) 
+	    {
+	        System.out.println("❌ Database Error while searching for student: " + e.getMessage());
+	    }
+	    
+	    return null;
     }
 	
 	public boolean isEmpty() 

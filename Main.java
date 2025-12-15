@@ -1,6 +1,7 @@
 package student_management_system;
 
 import java.util.InputMismatchException;
+import java.util.List;
 import java.util.Scanner;
 
 public class Main 
@@ -65,8 +66,21 @@ public class Main
 						
 						manager.addStudent(name, grade);
 						        break;
-						case 2: manager.viewAllStudents();
-								break;	
+						case 2: List<Student> students = manager.viewAllStudents();
+								if (students.isEmpty()) 
+								{
+							        System.out.println("📋 The student list is currently empty.");
+							    } 
+								else 
+								{
+							        System.out.println("\n--- All Recorded Students ---");
+							        for (Student s : students) 
+							        {
+							            System.out.println(s); 
+							        }
+							        System.out.println("-----------------------------");
+							    }
+							    break;
 						case 3: if (manager.isEmpty()) 
 								{
 							        System.out.println("❌ Cannot search. No students have been recorded yet.");

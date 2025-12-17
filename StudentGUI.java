@@ -16,7 +16,7 @@ public class StudentGUI extends JFrame {
     public StudentGUI() {
         super("Student Management System GUI");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setSize(500, 400);
+        setSize(500, 650);
         setLocationRelativeTo(null);
 
         // --- Add Student Panel ---
@@ -24,29 +24,26 @@ public class StudentGUI extends JFrame {
         addPanel.setBorder(BorderFactory.createTitledBorder("Add Student"));
 
         JTextField nameField = new JTextField(15);
-        JTextField gradeField = new JTextField(3);
+        
+        String[] grades = {"1", "2", "3", "4"};
+        JComboBox<String> gradeBox = new JComboBox<>(grades);
+        
         JButton addButton = new JButton("Add");
 
         addButton.addActionListener(e -> 
         {
             String name = nameField.getText().trim();
-            int grade;
-            try 
-            {
-                grade = Integer.parseInt(gradeField.getText().trim());
-                manager.addStudent(name, grade);
-                JOptionPane.showMessageDialog(this, "✅ Student added!");
-                nameField.setText("");
-                gradeField.setText("");
-            } catch (NumberFormatException ex) {
-                JOptionPane.showMessageDialog(this, "❌ Invalid grade input.");
-            }
+            int grade = Integer.parseInt((String) gradeBox.getSelectedItem());
+            manager.addStudent(name, grade);
+            JOptionPane.showMessageDialog(this, "✅ Student added!");
+            nameField.setText("");
+            gradeBox.setSelectedIndex(0);
         });
 
         addPanel.add(new JLabel("Name:"));
         addPanel.add(nameField);
         addPanel.add(new JLabel("Grade:"));
-        addPanel.add(gradeField);
+        addPanel.add(gradeBox);
         addPanel.add(addButton);
 
         // --- Search Student Panel ---
@@ -68,6 +65,7 @@ public class StudentGUI extends JFrame {
             } catch (NumberFormatException ex) {
                 JOptionPane.showMessageDialog(this, "❌ Invalid ID input.");
             }
+            searchIdField.setText("");
         });
 
         searchPanel.add(new JLabel("Student ID:"));
